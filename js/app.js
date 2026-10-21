@@ -4,7 +4,6 @@
 // Aucune solution n'est fournie : à vous de jouer !
 // ============================================================
 
-
 // ------------------------------------------------------------
 // ÉTAPE 0 : Découvrir les données
 // ------------------------------------------------------------
@@ -26,17 +25,16 @@ console.log(cours);
 // TODO : récupérez ces éléments et rangez-les dans des constantes.
 // Question : quelle est la différence entre getElementById et querySelector ?
 
-const coursesContainer = document.getElementById('courses-container')
-const selectedCourseTitle = document.getElementById('selected-course-title')
-const slotsContainer = document.getElementById('slots-container')
-const summaryCourse = document.getElementById('summary-course')
-const summarySlot = document.getElementById('summary-slot')
-const summarySeats = document.getElementById('summary-seats')
-const summaryCount = document.getElementById('summary-count')
-const summaryTotal = document.getElementById('summary-total')
-const confirmButton = document.getElementById('confirm-button')
-const message = document.getElementById('message')
-
+const coursesContainer = document.getElementById("courses-container");
+const selectedCourseTitle = document.getElementById("selected-course-title");
+const slotsContainer = document.getElementById("slots-container");
+const summaryCourse = document.getElementById("summary-course");
+const summarySlot = document.getElementById("summary-slot");
+const summarySeats = document.getElementById("summary-seats");
+const summaryCount = document.getElementById("summary-count");
+const summaryTotal = document.getElementById("summary-total");
+const confirmButton = document.getElementById("confirm-button");
+const message = document.getElementById("message");
 
 // ------------------------------------------------------------
 // ÉTAPE 2 : État de l'application
@@ -47,6 +45,9 @@ const message = document.getElementById('message')
 //  (cours choisi, créneau choisi, emplacements choisis...)
 // Indice : pourquoi un tableau est-il adapté pour les emplacements choisis ?
 
+let selectedCourse = null;
+let selectedTime = null;
+let selectedSeats = [];
 
 // ------------------------------------------------------------
 // ÉTAPE 3 : Afficher les cours (US01)
@@ -60,6 +61,35 @@ const message = document.getElementById('message')
 //  - Comment stocker l'id du cours sur la carte (indice : data-*) ?
 //  - Les template literals (`...${valeur}...`) peuvent-ils vous aider ?
 
+let template = "";
+cours.forEach((cours) => {
+  template += `
+    <article
+      class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+      data-id="${cours.id}"
+    >
+      <img
+        src="${cours.image}"
+        alt="Visuel du cours ${cours.nom}"
+        class="h-36 w-full object-cover"
+      />
+      <div class="space-y-1 p-4">
+        <span class="inline-block rounded-full bg-teal-50 px-2.5 py-0.5 text-xs font-medium text-teal-700">
+          ${cours.categorie}
+        </span>
+        <h3 class="text-lg font-semibold text-slate-900">${cours.nom}</h3>
+        <p class="text-sm text-slate-600">
+          ${cours.duree}, avec ${cours.coach}
+        </p>
+        <p class="pt-1 text-base font-bold text-slate-900">
+          ${cours.prix} €
+          <span class="text-sm font-normal text-slate-500">par place</span>
+        </p>
+      </div>
+    </article>`;
+});
+
+coursesContainer.innerHTML = template;
 
 // ------------------------------------------------------------
 // ÉTAPE 4 : Sélectionner un cours (US02)
@@ -73,6 +103,16 @@ const message = document.getElementById('message')
 //  - Comment retrouver le cours à partir de l'id lu dans la carte ?
 //  - Que faut-il réinitialiser quand on change de cours ?
 
+const cards = document.querySelectorAll(".cursor-pointer");
+
+cards.forEach((card) => {
+  card.addEventListener("click", () => {
+    cards.forEach((card) => {
+      card.classList.remove("ring-2", "ring-teal-600");
+    });
+    card.classList.add("ring-2", "ring-teal-600");
+  });
+});
 
 // ------------------------------------------------------------
 // ÉTAPE 5 : Afficher et sélectionner un créneau (US03)
@@ -84,6 +124,7 @@ const message = document.getElementById('message')
 // Questions :
 //  - Quand cette fonction doit-elle être appelée ?
 //  - Que se passe-t-il si aucun cours n'est encore sélectionné ?
+
 
 
 // ------------------------------------------------------------
@@ -98,7 +139,6 @@ const message = document.getElementById('message')
 //  - Comment savoir si un emplacement est dans la liste des occupés (includes) ?
 //  - Faut-il une boucle imbriquée ? Pourquoi ?
 
-
 // ------------------------------------------------------------
 // ÉTAPE 7 : Sélectionner / désélectionner des emplacements (US05)
 // ------------------------------------------------------------
@@ -111,7 +151,6 @@ const message = document.getElementById('message')
 //  - Comment vérifier qu'un id est déjà dans le tableau ?
 //  - Que doit-il se passer si on clique sur un emplacement occupé ?
 
-
 // ------------------------------------------------------------
 // ÉTAPE 8 : Calculer et afficher le récapitulatif (US06)
 // ------------------------------------------------------------
@@ -122,7 +161,6 @@ const message = document.getElementById('message')
 // Questions :
 //  - Que doit afficher le récapitulatif quand rien n'est sélectionné ?
 //  - Comment transformer un tableau en texte lisible ("C3, C4") (join) ?
-
 
 // ------------------------------------------------------------
 // ÉTAPE 9 : Confirmer une réservation fictive (US07)
@@ -135,14 +173,12 @@ const message = document.getElementById('message')
 //  - Comment afficher ou masquer #message (classe "hidden") ?
 //  - Faut-il réinitialiser la sélection après confirmation ? Quelles en sont les conséquences ?
 
-
 // ------------------------------------------------------------
 // ÉTAPE 10 : Initialisation
 // ------------------------------------------------------------
 // TODO : au chargement, sélectionnez par défaut le premier cours
 //  et affichez toute l'interface à partir des données.
 // Question : dans quel ordre faut-il appeler vos fonctions ?
-
 
 // ------------------------------------------------------------
 // BONUS (Partie 2 : page « Mes réservations »)
