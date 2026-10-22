@@ -36,6 +36,7 @@ const summaryTotal = document.getElementById("summary-total");
 const confirmButton = document.getElementById("confirm-button");
 const message = document.getElementById("message");
 const titreCreneaux = document.getElementById("titre-creneaux");
+const seatsContainer = document.getElementById("seats-container");
 
 // ------------------------------------------------------------
 // ÉTAPE 2 : État de l'application
@@ -126,8 +127,8 @@ cards.forEach((card) => {
 //  - Que se passe-t-il si aucun cours n'est encore sélectionné ?
 
 function affichezCréneaux(card) {
-  const myID = card.dataset.id;
   selectedCourseTitle.textContent = card.dataset.nom;
+  const myID = card.dataset.id;
   const cour = cours.find((item) => item.id == myID);
   let week = "";
   cour.creneaux.forEach((creneau) => {
@@ -145,6 +146,7 @@ function affichezCréneaux(card) {
         b.classList.remove("border-teal-600", "bg-teal-600", "text-white"),
       );
       btn.classList.add("border-teal-600", "bg-teal-600", "text-white");
+      afficherPlan(btn);
     });
   });
 }
@@ -160,6 +162,24 @@ function affichezCréneaux(card) {
 //  - Comment construire "A1" à partir d'une rangée et d'un numéro ?
 //  - Comment savoir si un emplacement est dans la liste des occupés (includes) ?
 //  - Faut-il une boucle imbriquée ? Pourquoi ?
+
+function afficherPlan() {
+  let plan = "";
+  const planseats = seatsContainer.querySelectorAll("[data-id]");
+  planseats.forEach(() => {
+    for (let i = 0; i <= tapisParRangee; i++) {
+      plan += `<button
+              type="button"
+              class="seat h-11 rounded-lg text-xs font-semibold transition border border-slate-300 bg-white text-slate-700 hover:border-teal-600"
+              data-id=""
+              aria-label="Tapis A1 libre"
+            >
+              
+            </button>`;
+    }
+  });
+  seatsContainer.innerHTML = plan;
+}
 
 // ------------------------------------------------------------
 // ÉTAPE 7 : Sélectionner / désélectionner des emplacements (US05)
