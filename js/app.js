@@ -111,6 +111,9 @@ cards.forEach((card) => {
   card.addEventListener("click", () => {
     cards.forEach((c) => c.classList.remove("ring-2", "ring-teal-600"));
     card.classList.add("ring-2", "ring-teal-600");
+    const courseId = card.dataset.id;
+    selectedCourse = cours.find((item) => item.id === courseId);
+    selectedSeats = [];
     affichezCréneaux(card);
   });
 });
@@ -146,7 +149,11 @@ function affichezCréneaux(card) {
         b.classList.remove("border-teal-600", "bg-teal-600", "text-white"),
       );
       btn.classList.add("border-teal-600", "bg-teal-600", "text-white");
-      afficherPlan(btn);
+      const slotId = btn.dataset.id;
+      const clickedCreneau = cour.creneaux.find((item) => item.id === slotId);
+      selectedTime = clickedCreneau;
+      selectedSeats = [];
+      afficherPlan(clickedCreneau);
     });
   });
 }
@@ -163,19 +170,33 @@ function affichezCréneaux(card) {
 //  - Comment savoir si un emplacement est dans la liste des occupés (includes) ?
 //  - Faut-il une boucle imbriquée ? Pourquoi ?
 
-function afficherPlan() {
+function afficherPlan(creneau) {
   let plan = "";
-  const planseats = seatsContainer.querySelectorAll("[data-id]");
-  planseats.forEach(() => {
-    for (let i = 0; i <= tapisParRangee; i++) {
-      plan += `<button
+  rangees.forEach((rangee) => {
+    for (let i = 1; i <= tapisParRangee; i++) {
+      const id = `${rangee}${i}`;
+      const isOccupied = creneau.occupes.includes(id);
+
+      if (isOccupied) {
+        plan += `<button
+              type="button"
+              class="seat h-11 rounded-lg text-xs font-semibold transition cursor-not-allowed bg-slate-300 text-slate-500"
+              data-id="${id}"
+              disabled
+              aria-label="Tapis ${id} occupé"
+            >
+              ${id}
+            </button>`;
+      } else {
+        plan += `<button
               type="button"
               class="seat h-11 rounded-lg text-xs font-semibold transition border border-slate-300 bg-white text-slate-700 hover:border-teal-600"
-              data-id=""
-              aria-label="Tapis A1 libre"
+              data-id="${id}"
+              aria-label="Tapis ${id} libre"
             >
-              
+              ${id}
             </button>`;
+      }
     }
   });
   seatsContainer.innerHTML = plan;
