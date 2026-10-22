@@ -35,6 +35,7 @@ const summaryCount = document.getElementById("summary-count");
 const summaryTotal = document.getElementById("summary-total");
 const confirmButton = document.getElementById("confirm-button");
 const message = document.getElementById("message");
+const titreCreneaux = document.getElementById("titre-creneaux");
 
 // ------------------------------------------------------------
 // ÉTAPE 2 : État de l'application
@@ -66,7 +67,7 @@ cours.forEach((cours) => {
   template += `
     <article
       class="cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
-      data-id="${cours.id}"
+      data-id="${cours.id}" data-nom="${cours.nom}"
     >
       <img
         src="${cours.image}"
@@ -103,14 +104,13 @@ coursesContainer.innerHTML = template;
 //  - Comment retrouver le cours à partir de l'id lu dans la carte ?
 //  - Que faut-il réinitialiser quand on change de cours ?
 
-const cards = document.querySelectorAll(".cursor-pointer");
+const cards = coursesContainer.querySelectorAll("[data-id]");
 
 cards.forEach((card) => {
   card.addEventListener("click", () => {
-    cards.forEach((card) => {
-      card.classList.remove("ring-2", "ring-teal-600");
-    });
+    cards.forEach((c) => c.classList.remove("ring-2", "ring-teal-600"));
     card.classList.add("ring-2", "ring-teal-600");
+    affichezCréneaux(card);
   });
 });
 
@@ -125,7 +125,29 @@ cards.forEach((card) => {
 //  - Quand cette fonction doit-elle être appelée ?
 //  - Que se passe-t-il si aucun cours n'est encore sélectionné ?
 
+function affichezCréneaux(card) {
+  const myID = card.dataset.id;
+  selectedCourseTitle.textContent = card.dataset.nom;
+  const cour = cours.find((item) => item.id == myID);
+  let week = "";
+  cour.creneaux.forEach((creneau) => {
+    week += `<button type="button" class="rounded-xl border px-4 py-2 text-sm font-medium transition border-slate-300 text-slate-800 hover:border-teal-600" data-id="${creneau.id}">
+      ${creneau.jour} <span class="font-normal">${creneau.heure}</span>
+    </button>`;
+  });
+  slotsContainer.innerHTML = week;
 
+  const buttons = slotsContainer.querySelectorAll("[data-id]");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      buttons.forEach((b) =>
+        b.classList.remove("border-teal-600", "bg-teal-600", "text-white"),
+      );
+      btn.classList.add("border-teal-600", "bg-teal-600", "text-white");
+    });
+  });
+}
 
 // ------------------------------------------------------------
 // ÉTAPE 6 : Afficher le plan de la salle (US04)
